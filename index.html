@@ -1,0 +1,1530 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>RPGM Indonesia - Game Sharing Platform</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --primary: #7B2FBE;
+      --accent: #9D4EDD;
+      --btn: #8B5CF6;
+      --btn-hover: #7C3AED;
+      --dark: #0d0a1a;
+      --dark2: #13102a;
+      --dark3: #1a1535;
+      --card: rgba(26, 21, 53, 0.85);
+      --card-border: rgba(155, 78, 221, 0.25);
+      --text: #ffffff;
+      --text-muted: #b8a9d9;
+    }
+
+    body {
+      font-family: 'Segoe UI', system-ui, sans-serif;
+      background: var(--dark);
+      color: var(--text);
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    #bg-img {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      object-fit: cover;
+      z-index: 0;
+      opacity: 0.35;
+      pointer-events: none;
+    }
+
+    .content-wrap {
+      position: relative;
+      z-index: 1;
+    }
+
+    /* NAVBAR */
+    nav {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: rgba(13, 10, 26, 0.92);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--card-border);
+      padding: 0 2rem;
+    }
+
+    .nav-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 68px;
+      gap: 1rem;
+    }
+
+    .nav-brand {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      text-decoration: none;
+    }
+
+    .nav-avatar {
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 2px solid var(--accent);
+      flex-shrink: 0;
+    }
+
+    .nav-brand-text .brand-name {
+      font-size: 1.15rem;
+      font-weight: 700;
+      color: var(--text);
+      line-height: 1.2;
+      letter-spacing: 0.02em;
+    }
+
+    .nav-brand-text .brand-sub {
+      font-size: 0.72rem;
+      color: var(--text-muted);
+      line-height: 1;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 0.25rem;
+      list-style: none;
+    }
+
+    .nav-links a {
+      display: block;
+      padding: 0.5rem 1rem;
+      color: var(--text-muted);
+      text-decoration: none;
+      border-radius: 8px;
+      font-size: 0.92rem;
+      font-weight: 500;
+      transition: all 0.2s;
+    }
+
+    .nav-links a:hover,
+    .nav-links a.active {
+      color: var(--text);
+      background: rgba(139, 92, 246, 0.15);
+    }
+
+    .hamburger {
+      display: none;
+      flex-direction: column;
+      gap: 5px;
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 4px;
+    }
+
+    .hamburger span {
+      display: block;
+      width: 24px;
+      height: 2px;
+      background: var(--text);
+      border-radius: 2px;
+      transition: all 0.3s;
+    }
+
+    /* PAGES */
+    .page { display: none; }
+    .page.active { display: block; }
+
+    /* HERO */
+    .hero {
+      min-height: 88vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 4rem 2rem;
+    }
+
+    .hero-content {
+      max-width: 700px;
+    }
+
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: rgba(123, 47, 190, 0.2);
+      border: 1px solid rgba(157, 78, 221, 0.4);
+      color: #c084fc;
+      padding: 0.4rem 1rem;
+      border-radius: 999px;
+      font-size: 0.82rem;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      margin-bottom: 1.5rem;
+    }
+
+    .hero h1 {
+      font-size: clamp(2.5rem, 6vw, 4rem);
+      font-weight: 800;
+      line-height: 1.1;
+      margin-bottom: 1.25rem;
+      background: linear-gradient(135deg, #fff 40%, #c084fc);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .hero p {
+      font-size: 1.1rem;
+      color: var(--text-muted);
+      line-height: 1.7;
+      margin-bottom: 2.5rem;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.85rem 2rem;
+      background: var(--btn);
+      color: white;
+      border: none;
+      border-radius: 10px;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      text-decoration: none;
+      transition: all 0.2s;
+      box-shadow: 0 4px 20px rgba(139, 92, 246, 0.35);
+    }
+
+    .btn:hover {
+      background: var(--btn-hover);
+      transform: translateY(-2px);
+      box-shadow: 0 6px 28px rgba(139, 92, 246, 0.5);
+    }
+
+    .btn-outline {
+      background: transparent;
+      border: 1.5px solid var(--accent);
+      color: var(--accent);
+      box-shadow: none;
+    }
+
+    .btn-outline:hover {
+      background: rgba(157, 78, 221, 0.12);
+      transform: translateY(-2px);
+    }
+
+    .btn-sm {
+      padding: 0.5rem 1.1rem;
+      font-size: 0.85rem;
+    }
+
+    .btn-danger {
+      background: #dc2626;
+      box-shadow: 0 4px 20px rgba(220, 38, 38, 0.3);
+    }
+
+    .btn-danger:hover { background: #b91c1c; }
+
+    /* SECTION */
+    .section {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 3rem 2rem;
+    }
+
+    .section-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 2rem;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+
+    .section-title {
+      font-size: 1.6rem;
+      font-weight: 700;
+      color: var(--text);
+    }
+
+    .section-title span {
+      color: var(--accent);
+    }
+
+    /* FILTERS */
+    .filter-bar {
+      display: flex;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+      margin-bottom: 1.75rem;
+    }
+
+    .filter-btn {
+      padding: 0.4rem 1rem;
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.1);
+      color: var(--text-muted);
+      border-radius: 999px;
+      font-size: 0.82rem;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .filter-btn:hover,
+    .filter-btn.active {
+      background: rgba(139, 92, 246, 0.2);
+      border-color: var(--accent);
+      color: white;
+    }
+
+    /* GAME GRID */
+    .game-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(290px, 1fr));
+      gap: 1.5rem;
+    }
+
+    .game-card {
+      background: var(--card);
+      border: 1px solid var(--card-border);
+      border-radius: 14px;
+      overflow: hidden;
+      transition: all 0.3s;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .game-card:hover {
+      transform: translateY(-4px);
+      border-color: var(--accent);
+      box-shadow: 0 12px 40px rgba(123, 47, 190, 0.25);
+    }
+
+    .game-cover {
+      width: 100%;
+      aspect-ratio: 3/2;
+      object-fit: cover;
+      display: block;
+      background: var(--dark3);
+    }
+
+    .game-cover-placeholder {
+      width: 100%;
+      aspect-ratio: 3/2;
+      background: linear-gradient(135deg, var(--dark3), var(--dark2));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--text-muted);
+      font-size: 2.5rem;
+    }
+
+    .game-body {
+      padding: 1.1rem;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 0.6rem;
+    }
+
+    .game-title {
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: var(--text);
+      line-height: 1.3;
+    }
+
+    .genre-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.35rem;
+    }
+
+    .genre-tag {
+      background: rgba(123, 47, 190, 0.25);
+      border: 1px solid rgba(157, 78, 221, 0.3);
+      color: #c084fc;
+      padding: 0.2rem 0.6rem;
+      border-radius: 999px;
+      font-size: 0.72rem;
+      font-weight: 600;
+    }
+
+    .game-synopsis {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      line-height: 1.6;
+      flex: 1;
+      display: -webkit-box;
+      -webkit-line-clamp: 3;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+
+    .game-meta {
+      font-size: 0.78rem;
+      color: var(--text-muted);
+    }
+
+    .game-meta a {
+      color: #c084fc;
+      text-decoration: none;
+    }
+
+    .game-meta a:hover { text-decoration: underline; }
+
+    .game-actions {
+      display: flex;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+      margin-top: 0.5rem;
+    }
+
+    /* EMPTY STATE */
+    .empty-state {
+      text-align: center;
+      padding: 5rem 2rem;
+      color: var(--text-muted);
+    }
+
+    .empty-state .empty-icon {
+      font-size: 4rem;
+      margin-bottom: 1rem;
+      opacity: 0.4;
+    }
+
+    .empty-state h3 { font-size: 1.2rem; margin-bottom: 0.5rem; color: var(--text); }
+
+    /* LOADING */
+    .loading-wrap {
+      text-align: center;
+      padding: 4rem 2rem;
+      color: var(--text-muted);
+    }
+
+    .spinner {
+      width: 40px;
+      height: 40px;
+      border: 3px solid rgba(139, 92, 246, 0.2);
+      border-top-color: var(--btn);
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+      margin: 0 auto 1rem;
+    }
+
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* ABOUT */
+    .about-card {
+      background: var(--card);
+      border: 1px solid var(--card-border);
+      border-radius: 14px;
+      padding: 2rem;
+      max-width: 720px;
+      margin: 0 auto;
+    }
+
+    .about-card h2 {
+      font-size: 1.4rem;
+      font-weight: 700;
+      margin-bottom: 1rem;
+      color: var(--accent);
+    }
+
+    .about-card p {
+      color: var(--text-muted);
+      line-height: 1.8;
+      margin-bottom: 1rem;
+    }
+
+    /* FOOTER */
+    footer {
+      background: rgba(13, 10, 26, 0.9);
+      border-top: 1px solid var(--card-border);
+      padding: 2rem;
+      text-align: center;
+      color: var(--text-muted);
+      font-size: 0.85rem;
+      position: relative;
+      z-index: 1;
+    }
+
+    #footer-copy {
+      cursor: default;
+      user-select: none;
+    }
+
+    /* ADMIN MODAL */
+    .modal-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.75);
+      z-index: 200;
+      align-items: center;
+      justify-content: center;
+      padding: 1rem;
+    }
+
+    .modal-overlay.open { display: flex; }
+
+    .modal {
+      background: var(--dark2);
+      border: 1px solid var(--card-border);
+      border-radius: 16px;
+      width: 100%;
+      max-width: 640px;
+      max-height: 90vh;
+      overflow-y: auto;
+      position: relative;
+    }
+
+    .modal-header {
+      padding: 1.25rem 1.5rem;
+      border-bottom: 1px solid var(--card-border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .modal-header h2 {
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: var(--accent);
+    }
+
+    .modal-close {
+      background: none;
+      border: none;
+      color: var(--text-muted);
+      font-size: 1.4rem;
+      cursor: pointer;
+      padding: 0.2rem 0.5rem;
+      border-radius: 6px;
+      transition: all 0.2s;
+    }
+
+    .modal-close:hover { color: white; background: rgba(255,255,255,0.08); }
+
+    .modal-body { padding: 1.5rem; }
+
+    /* TABS */
+    .tabs {
+      display: flex;
+      gap: 0.5rem;
+      margin-bottom: 1.5rem;
+      border-bottom: 1px solid var(--card-border);
+    }
+
+    .tab-btn {
+      padding: 0.6rem 1.2rem;
+      background: none;
+      border: none;
+      color: var(--text-muted);
+      font-size: 0.9rem;
+      font-weight: 600;
+      cursor: pointer;
+      border-bottom: 2px solid transparent;
+      margin-bottom: -1px;
+      transition: all 0.2s;
+    }
+
+    .tab-btn.active {
+      color: var(--accent);
+      border-bottom-color: var(--accent);
+    }
+
+    .tab-content { display: none; }
+    .tab-content.active { display: block; }
+
+    /* FORM */
+    .form-group {
+      margin-bottom: 1.1rem;
+    }
+
+    .form-group label {
+      display: block;
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: var(--text-muted);
+      margin-bottom: 0.4rem;
+    }
+
+    .form-group input,
+    .form-group textarea,
+    .form-group select {
+      width: 100%;
+      padding: 0.7rem 0.9rem;
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.12);
+      border-radius: 8px;
+      color: var(--text);
+      font-size: 0.9rem;
+      font-family: inherit;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+
+    .form-group input:focus,
+    .form-group textarea:focus {
+      border-color: var(--accent);
+    }
+
+    .form-group textarea { resize: vertical; min-height: 90px; }
+
+    /* DRAG DROP */
+    .drop-zone {
+      border: 2px dashed rgba(157, 78, 221, 0.4);
+      border-radius: 10px;
+      padding: 2rem;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.2s;
+      position: relative;
+    }
+
+    .drop-zone:hover,
+    .drop-zone.dragover {
+      border-color: var(--accent);
+      background: rgba(157, 78, 221, 0.06);
+    }
+
+    .drop-zone.uploading {
+      pointer-events: none;
+      opacity: 0.75;
+      border-color: var(--accent);
+    }
+
+    .drop-zone.uploading .drop-zone-text .drop-icon {
+      display: inline-block;
+      animation: spin 1s linear infinite;
+    }
+
+    @keyframes spin {
+      from { transform: rotate(0deg); }
+      to   { transform: rotate(360deg); }
+    }
+
+    .drop-zone input[type="file"] {
+      position: absolute;
+      inset: 0;
+      opacity: 0;
+      cursor: pointer;
+      width: 100%;
+      height: 100%;
+    }
+
+    .drop-zone-text {
+      color: var(--text-muted);
+      font-size: 0.88rem;
+    }
+
+    .drop-zone-text .drop-icon { font-size: 2rem; display: block; margin-bottom: 0.5rem; }
+
+    .cover-preview {
+      margin-top: 0.75rem;
+      border-radius: 8px;
+      overflow: hidden;
+      max-height: 160px;
+      display: none;
+    }
+
+    .cover-preview img {
+      width: 100%;
+      height: 160px;
+      object-fit: cover;
+    }
+
+    /* GENRE INPUT */
+    .genre-input-wrap {
+      display: flex;
+      gap: 0.5rem;
+    }
+
+    .genre-input-wrap input { flex: 1; }
+
+    .genre-chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.4rem;
+      margin-top: 0.5rem;
+    }
+
+    .genre-chip {
+      background: rgba(123, 47, 190, 0.25);
+      border: 1px solid rgba(157, 78, 221, 0.3);
+      color: #c084fc;
+      padding: 0.22rem 0.65rem;
+      border-radius: 999px;
+      font-size: 0.78rem;
+      display: flex;
+      align-items: center;
+      gap: 0.35rem;
+    }
+
+    .genre-chip .rm {
+      cursor: pointer;
+      opacity: 0.7;
+      font-size: 0.9rem;
+      line-height: 1;
+    }
+
+    .genre-chip .rm:hover { opacity: 1; }
+
+    /* MANAGE LIST */
+    .manage-list { display: flex; flex-direction: column; gap: 0.75rem; }
+
+    .manage-item {
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 10px;
+      padding: 0.85rem 1rem;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .manage-item img {
+      width: 52px;
+      height: 36px;
+      object-fit: cover;
+      border-radius: 6px;
+      flex-shrink: 0;
+      background: var(--dark3);
+    }
+
+    .manage-item-info { flex: 1; min-width: 0; }
+
+    .manage-item-title {
+      font-size: 0.9rem;
+      font-weight: 600;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .manage-item-genre {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      margin-top: 0.1rem;
+    }
+
+    .manage-item-actions { display: flex; gap: 0.4rem; flex-shrink: 0; }
+
+    /* PASSWORD MODAL */
+    #pw-modal .modal { max-width: 360px; }
+
+    /* TOAST */
+    #toast-container {
+      position: fixed;
+      bottom: 2rem;
+      right: 2rem;
+      z-index: 999;
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+
+    .toast {
+      padding: 0.8rem 1.2rem;
+      border-radius: 10px;
+      font-size: 0.88rem;
+      font-weight: 600;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.4);
+      animation: slideIn 0.3s ease;
+      max-width: 300px;
+    }
+
+    .toast.success { background: #15803d; color: white; }
+    .toast.error { background: #b91c1c; color: white; }
+    .toast.info { background: var(--primary); color: white; }
+
+    @keyframes slideIn {
+      from { transform: translateX(100%); opacity: 0; }
+      to { transform: translateX(0); opacity: 1; }
+    }
+
+    /* RESPONSIVE */
+    @media (max-width: 640px) {
+      .nav-links { display: none; flex-direction: column; position: absolute; top: 68px; left: 0; right: 0; background: rgba(13,10,26,0.98); border-bottom: 1px solid var(--card-border); padding: 1rem; gap: 0.25rem; }
+      .nav-links.open { display: flex; }
+      nav { position: relative; }
+      .nav-inner { position: static; }
+      .hamburger { display: flex; }
+      .hero h1 { font-size: 2rem; }
+      .section { padding: 2rem 1rem; }
+      .game-grid { grid-template-columns: 1fr; }
+    }
+
+    /* SCROLLBAR */
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: var(--dark); }
+    ::-webkit-scrollbar-thumb { background: var(--primary); border-radius: 3px; }
+
+    /* EDIT MODAL INLINE */
+    #edit-modal .modal { max-width: 640px; }
+  </style>
+</head>
+<body>
+
+<img id="bg-img" src="https://i.ibb.co/jktfGCQr/FB-IMG-1781414623452.jpg" alt="">
+
+<div class="content-wrap">
+
+  <!-- NAVBAR -->
+  <nav>
+    <div class="nav-inner">
+      <a href="#" class="nav-brand" onclick="showPage('home');return false;">
+        <img src="https://i.imgur.com/VWYuRoA.jpeg" alt="Stazzz" class="nav-avatar">
+        <div class="nav-brand-text">
+          <div class="brand-name">Stazzz</div>
+          <div class="brand-sub">Game Sharing Platform</div>
+        </div>
+      </a>
+      <button class="hamburger" id="hamburger" onclick="toggleMenu()" aria-label="Menu">
+        <span></span><span></span><span></span>
+      </button>
+      <ul class="nav-links" id="nav-links">
+        <li><a href="#" onclick="showPage('home');return false;" id="nav-home" class="active">Beranda</a></li>
+        <li><a href="#" onclick="showPage('games');return false;" id="nav-games">Daftar Game</a></li>
+        <li><a href="#" onclick="showPage('about');return false;" id="nav-about">Tentang</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <!-- PAGE: HOME -->
+  <div id="page-home" class="page active">
+    <section class="hero">
+      <div class="hero-content">
+        <div class="hero-badge">🎮 Platform Game Indonesia</div>
+        <h1>RPGM Indonesia</h1>
+        <p>Satu tempat untuk mengunduh dan mengeksplorasi RPGM subtitle Indonesia</p>
+        <button class="btn" onclick="showPage('games')">
+          🕹️ Jelajahi Game
+        </button>
+      </div>
+    </section>
+  </div>
+
+  <!-- PAGE: GAMES -->
+  <div id="page-games" class="page">
+    <div class="section">
+      <div class="section-header">
+        <h2 class="section-title">Daftar <span>Game</span></h2>
+      </div>
+      <div class="filter-bar" id="filter-bar">
+        <button class="filter-btn active" onclick="filterGames('all', this)">Semua</button>
+      </div>
+      <div id="game-list-wrap">
+        <div class="loading-wrap">
+          <div class="spinner"></div>
+          <p>Memuat data game...</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- PAGE: ABOUT -->
+  <div id="page-about" class="page">
+    <div class="section">
+      <div class="about-card">
+        <h2>Tentang RPGM Indonesia</h2>
+        <p>
+          RPGM Indonesia adalah platform berbagi game RPG Maker yang telah diterjemahkan ke dalam Bahasa Indonesia. Kami berkomitmen untuk membuat game-game berkualitas dari berbagai penjuru dunia lebih mudah diakses oleh komunitas gamer Indonesia.
+        </p>
+        <p>
+          Di sini kamu bisa menemukan berbagai judul RPG Maker dengan subtitle atau terjemahan Indonesia lengkap, mulai dari game horor, petualangan, hingga romance. Setiap game dikurasi dan disertai informasi lengkap termasuk kredit untuk developer aslinya.
+        </p>
+        <p>
+          Platform ini dikelola oleh komunitas pecinta RPG Maker Indonesia. Semua konten yang tersedia menghormati hak cipta developer asli dan menyertakan kredit yang sesuai.
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <footer>
+    <span id="footer-copy">&copy; 2025 Stazzz · RPGM Indonesia</span>
+    <br><small>Game Sharing Platform</small>
+  </footer>
+
+</div>
+
+<!-- PASSWORD MODAL -->
+<div class="modal-overlay" id="pw-modal">
+  <div class="modal">
+    <div class="modal-header">
+      <h2>🔐 Admin Login</h2>
+      <button class="modal-close" onclick="closeModal('pw-modal')">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="form-group">
+        <label>Password Admin</label>
+        <input type="password" id="pw-input" placeholder="Masukkan password..." onkeyup="if(event.key==='Enter')checkPassword()">
+      </div>
+      <button class="btn" style="width:100%" onclick="checkPassword()">Masuk</button>
+    </div>
+  </div>
+</div>
+
+<!-- ADMIN MODAL -->
+<div class="modal-overlay" id="admin-modal">
+  <div class="modal">
+    <div class="modal-header">
+      <h2>⚙️ Admin Panel</h2>
+      <button class="modal-close" onclick="closeModal('admin-modal')">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="tabs">
+        <button class="tab-btn active" onclick="switchTab('tab-add', this)">➕ Tambah Game</button>
+        <button class="tab-btn" onclick="switchTab('tab-manage', this)">📋 Kelola Game</button>
+      </div>
+
+      <!-- TAB ADD -->
+      <div id="tab-add" class="tab-content active">
+        <div class="form-group">
+            <label>URL Cover Game</label>
+            <input type="url" id="cover-input" placeholder="https://files.catbox.moe/xxx.jpg">
+        </div>
+          <div class="cover-preview" id="cover-preview">
+            <img id="cover-preview-img" src="" alt="">
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Judul Game *</label>
+          <input type="text" id="add-title" placeholder="Nama game...">
+        </div>
+        <div class="form-group">
+          <label>Sinopsis *</label>
+          <textarea id="add-synopsis" placeholder="Cerita singkat game..."></textarea>
+        </div>
+        <div class="form-group">
+          <label>Genre</label>
+          <div class="genre-input-wrap">
+            <input type="text" id="genre-input" placeholder="Tambah genre..." onkeyup="if(event.key==='Enter')addGenreChip()">
+            <button class="btn btn-sm" onclick="addGenreChip()">+</button>
+          </div>
+          <div class="genre-chips" id="genre-chips"></div>
+        </div>
+        <div class="form-group">
+          <label>Link Download *</label>
+          <input type="url" id="add-download" placeholder="https://...">
+        </div>
+        <div class="form-group">
+          <label>Nama Developer Asli *</label>
+          <input type="text" id="add-dev" placeholder="Nama developer...">
+        </div>
+        <div class="form-group">
+          <label>Link Game Original</label>
+          <input type="url" id="add-original" placeholder="https://...">
+        </div>
+        <button class="btn" style="width:100%" onclick="publishGame()">🚀 Publish Game</button>
+      </div>
+
+      <!-- TAB MANAGE -->
+      <div id="tab-manage" class="tab-content">
+        <div id="manage-list" class="manage-list">
+          <div class="loading-wrap" style="padding:2rem;">
+            <div class="spinner"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- EDIT MODAL -->
+<div class="modal-overlay" id="edit-modal">
+  <div class="modal">
+    <div class="modal-header">
+      <h2>✏️ Edit Game</h2>
+      <button class="modal-close" onclick="closeModal('edit-modal')">✕</button>
+    </div>
+    <div class="modal-body">
+      <input type="hidden" id="edit-id">
+      <div class="form-group">
+        <label>Cover Game (kosongkan jika tidak diganti)</label>
+        <div class="drop-zone" id="edit-drop-zone">
+          <input type="file" id="edit-cover-input" accept="image/*" onchange="handleEditCoverFile(this.files[0])">
+          <div class="drop-zone-text">
+            <span class="drop-icon">🖼️</span>
+            Drag & drop cover baru atau klik untuk pilih
+          </div>
+        </div>
+        <div class="cover-preview" id="edit-cover-preview">
+          <img id="edit-cover-preview-img" src="" alt="">
+        </div>
+      </div>
+      <div class="form-group">
+        <label>Judul Game *</label>
+        <input type="text" id="edit-title" placeholder="Nama game...">
+      </div>
+      <div class="form-group">
+        <label>Sinopsis *</label>
+        <textarea id="edit-synopsis" placeholder="Cerita singkat game..."></textarea>
+      </div>
+      <div class="form-group">
+        <label>Genre</label>
+        <div class="genre-input-wrap">
+          <input type="text" id="edit-genre-input" placeholder="Tambah genre..." onkeyup="if(event.key==='Enter')addEditGenreChip()">
+          <button class="btn btn-sm" onclick="addEditGenreChip()">+</button>
+        </div>
+        <div class="genre-chips" id="edit-genre-chips"></div>
+      </div>
+      <div class="form-group">
+        <label>Link Download *</label>
+        <input type="url" id="edit-download" placeholder="https://...">
+      </div>
+      <div class="form-group">
+        <label>Nama Developer Asli *</label>
+        <input type="text" id="edit-dev" placeholder="Nama developer...">
+      </div>
+      <div class="form-group">
+        <label>Link Game Original</label>
+        <input type="url" id="edit-original" placeholder="https://...">
+      </div>
+      <button class="btn" style="width:100%" onclick="saveEdit()">💾 Simpan Perubahan</button>
+    </div>
+  </div>
+</div>
+
+<!-- TOAST CONTAINER -->
+<div id="toast-container"></div>
+
+<script>
+// ===================== CONFIG =====================
+const JSONBIN_KEY = '$2a$10$/3N/nTd3keEGMRP1G/Fov.DJ14H0cwr7MyRTau/DAOxOAj8Iim8fi';
+const JSONBIN_BIN = '6a2e7869da38895dfebde67c';
+const JSONBIN_URL = `https://api.jsonbin.io/v3/b/${JSONBIN_BIN}`;
+const CACHE_KEY = 'rpgm_games_cache';
+const CACHE_TS_KEY = 'rpgm_cache_ts';
+const CACHE_TTL = 5 * 60 * 1000; // 5 menit
+
+// ===================== STATE =====================
+let games = [];
+let currentFilter = 'all';
+let addGenres = [];
+let editGenres = [];
+let addCoverUrl = null;
+let editCoverUrl = null;
+
+// ===================== CACHE =====================
+function saveCache(data) {
+  sessionStorage.setItem(CACHE_KEY, JSON.stringify(data));
+  sessionStorage.setItem(CACHE_TS_KEY, Date.now().toString());
+}
+
+function loadCache() {
+  const ts = parseInt(sessionStorage.getItem(CACHE_TS_KEY) || '0');
+  if (Date.now() - ts > CACHE_TTL) return null;
+  const raw = sessionStorage.getItem(CACHE_KEY);
+  return raw ? JSON.parse(raw) : null;
+}
+
+function clearCache() {
+  sessionStorage.removeItem(CACHE_KEY);
+  sessionStorage.removeItem(CACHE_TS_KEY);
+}
+
+// ===================== API =====================
+async function fetchFromAPI() {
+  const res = await fetch(JSONBIN_URL + '/latest', {
+    headers: { 'X-Master-Key': JSONBIN_KEY }
+  });
+  if (!res.ok) throw new Error('Gagal fetch data');
+  const json = await res.json();
+  return json.record.games || [];
+}
+
+async function saveToAPI(gamesData) {
+  const res = await fetch(JSONBIN_URL, {
+    method: 'PUT',
+    headers: {
+      'Content-Type': 'application/json',
+      'X-Master-Key': JSONBIN_KEY
+    },
+    body: JSON.stringify({ games: gamesData })
+  });
+  if (!res.ok) throw new Error('Gagal simpan data');
+  return true;
+}
+
+async function loadGames(forceRefresh = false) {
+  if (!forceRefresh) {
+    const cached = loadCache();
+    if (cached) {
+      games = cached;
+      return games;
+    }
+  }
+  games = await fetchFromAPI();
+  saveCache(games);
+  return games;
+}
+
+// ===================== PAGES =====================
+function showPage(name) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-links a').forEach(a => a.classList.remove('active'));
+  document.getElementById('page-' + name).classList.add('active');
+  const navEl = document.getElementById('nav-' + name);
+  if (navEl) navEl.classList.add('active');
+  document.getElementById('nav-links').classList.remove('open');
+
+  if (name === 'games') {
+    renderGamesPage();
+  }
+}
+
+function toggleMenu() {
+  document.getElementById('nav-links').classList.toggle('open');
+}
+
+// ===================== RENDER GAMES =====================
+async function renderGamesPage() {
+  const wrap = document.getElementById('game-list-wrap');
+  wrap.innerHTML = '<div class="loading-wrap"><div class="spinner"></div><p>Memuat data game...</p></div>';
+
+  try {
+    await loadGames();
+    renderFilterBar();
+    renderGameCards(games);
+  } catch (e) {
+    wrap.innerHTML = `<div class="empty-state"><div class="empty-icon">⚠️</div><h3>Gagal memuat data</h3><p>${e.message}</p><br><button class="btn btn-sm" onclick="renderGamesPage()">Coba Lagi</button></div>`;
+  }
+}
+
+function getAllGenres() {
+  const set = new Set();
+  games.forEach(g => {
+    (g.genres || []).forEach(genre => set.add(genre));
+  });
+  return [...set].sort();
+}
+
+function renderFilterBar() {
+  const bar = document.getElementById('filter-bar');
+  const genres = getAllGenres();
+  bar.innerHTML = `<button class="filter-btn ${currentFilter === 'all' ? 'active' : ''}" onclick="filterGames('all', this)">Semua</button>`;
+  genres.forEach(genre => {
+    bar.innerHTML += `<button class="filter-btn ${currentFilter === genre ? 'active' : ''}" onclick="filterGames('${escapeAttr(genre)}', this)">${escHtml(genre)}</button>`;
+  });
+}
+
+function filterGames(genre, btn) {
+  currentFilter = genre;
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  if (btn) btn.classList.add('active');
+  renderGameCards(games);
+}
+
+function renderGameCards(allGames) {
+  const wrap = document.getElementById('game-list-wrap');
+  const filtered = currentFilter === 'all'
+    ? allGames
+    : allGames.filter(g => (g.genres || []).includes(currentFilter));
+
+  if (filtered.length === 0) {
+    wrap.innerHTML = `<div class="empty-state"><div class="empty-icon">🎮</div><h3>Belum ada game</h3><p>Admin belum menambahkan game apapun.</p></div>`;
+    return;
+  }
+
+  wrap.innerHTML = `<div class="game-grid">${filtered.map(gameCardHTML).join('')}</div>`;
+}
+
+function gameCardHTML(g) {
+  const cover = g.cover
+    ? `<img class="game-cover" src="${escAttr(g.cover)}" alt="${escAttr(g.title)}" onerror="this.parentElement.innerHTML='<div class=\\'game-cover-placeholder\\'>🎮</div>'">`
+    : `<div class="game-cover-placeholder">🎮</div>`;
+
+  const genreTags = (g.genres || []).map(genre =>
+    `<span class="genre-tag">${escHtml(genre)}</span>`
+  ).join('');
+
+  const devLine = g.developer ? `<div class="game-meta">Developer: ${escHtml(g.developer)}${g.originalLink ? ` · <a href="${escAttr(g.originalLink)}" target="_blank" rel="noopener">Game Original</a>` : ''}</div>` : '';
+
+  return `
+    <div class="game-card">
+      ${cover}
+      <div class="game-body">
+        <div class="game-title">${escHtml(g.title)}</div>
+        ${genreTags ? `<div class="genre-tags">${genreTags}</div>` : ''}
+        <p class="game-synopsis">${escHtml(g.synopsis || '')}</p>
+        ${devLine}
+        <div class="game-actions">
+          ${g.downloadLink ? `<a href="${escAttr(g.downloadLink)}" target="_blank" rel="noopener" class="btn btn-sm">⬇ Download</a>` : ''}
+        </div>
+      </div>
+    </div>`;
+}
+
+// ===================== ADMIN UNLOCK =====================
+let clickTimes = [];
+
+document.getElementById('footer-copy').addEventListener('click', function () {
+  const now = Date.now();
+  clickTimes = clickTimes.filter(t => now - t < 3000);
+  clickTimes.push(now);
+  if (clickTimes.length >= 5) {
+    clickTimes = [];
+    openModal('pw-modal');
+    document.getElementById('pw-input').value = '';
+  }
+});
+
+function checkPassword() {
+  const val = document.getElementById('pw-input').value;
+  if (val === 'RPGMindonesia830@@') {
+    closeModal('pw-modal');
+    openAdminPanel();
+  } else {
+    toast('Password salah!', 'error');
+    document.getElementById('pw-input').value = '';
+  }
+}
+
+function openAdminPanel() {
+  openModal('admin-modal');
+  switchTab('tab-add', document.querySelector('.tab-btn'));
+  renderManageList();
+}
+
+// ===================== COVER COMPRESS =====================
+function compressCover(file) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onerror = () => reject(new Error('Gagal membaca file'));
+    reader.onload = function (e) {
+      const img = new Image();
+      img.onerror = () => reject(new Error('Gagal memuat gambar'));
+      img.onload = function () {
+        const MAX_W = 400, MAX_H = 600;
+        let w = img.width, h = img.height;
+        if (w > MAX_W || h > MAX_H) {
+          const ratio = Math.min(MAX_W / w, MAX_H / h);
+          w = Math.round(w * ratio);
+          h = Math.round(h * ratio);
+        }
+        const canvas = document.createElement('canvas');
+        canvas.width = w;
+        canvas.height = h;
+        canvas.getContext('2d').drawImage(img, 0, 0, w, h);
+        resolve(canvas.toDataURL('image/jpeg', 0.6));
+      };
+      img.src = e.target.result;
+    };
+    reader.readAsDataURL(file);
+  });
+}
+
+// ===================== ADMIN - ADD GAME =====================
+function handleCoverUrl() {
+  const url = document.getElementById('cover-input').value.trim();
+  if (url) {
+    addCoverUrl = url;
+    document.getElementById('cover-preview-img').src = url;
+    document.getElementById('cover-preview').style.display = 'block';
+  }
+}
+
+document.getElementById('cover-input').addEventListener('input', handleCoverUrl);
+
+function addGenreChip() {
+  const input = document.getElementById('genre-input');
+  const val = input.value.trim();
+  if (!val || addGenres.includes(val)) { input.value = ''; return; }
+  addGenres.push(val);
+  input.value = '';
+  renderAddGenreChips();
+}
+
+function renderAddGenreChips() {
+  const wrap = document.getElementById('genre-chips');
+  wrap.innerHTML = addGenres.map((g, i) =>
+    `<span class="genre-chip">${escHtml(g)}<span class="rm" onclick="removeAddGenre(${i})">×</span></span>`
+  ).join('');
+}
+
+function removeAddGenre(i) {
+  addGenres.splice(i, 1);
+  renderAddGenreChips();
+}
+
+async function publishGame() {
+  const title = document.getElementById('add-title').value.trim();
+  const synopsis = document.getElementById('add-synopsis').value.trim();
+  const downloadLink = document.getElementById('add-download').value.trim();
+  const developer = document.getElementById('add-dev').value.trim();
+  const originalLink = document.getElementById('add-original').value.trim();
+
+  if (!title) { toast('Judul game wajib diisi!', 'error'); return; }
+  if (!synopsis) { toast('Sinopsis wajib diisi!', 'error'); return; }
+  if (!downloadLink) { toast('Link download wajib diisi!', 'error'); return; }
+  if (!developer) { toast('Nama developer wajib diisi!', 'error'); return; }
+
+  const newGame = {
+    id: Date.now().toString(),
+    title,
+    synopsis,
+    genres: [...addGenres],
+    downloadLink,
+    developer,
+    originalLink: originalLink || '',
+    cover: addCoverUrl || ''
+  };
+
+  try {
+    await loadGames();
+    games.push(newGame);
+    await saveToAPI(games);
+    saveCache(games);
+    toast('Game berhasil dipublish!', 'success');
+
+    // Reset form
+    document.getElementById('add-title').value = '';
+    document.getElementById('add-synopsis').value = '';
+    document.getElementById('add-download').value = '';
+    document.getElementById('add-dev').value = '';
+    document.getElementById('add-original').value = '';
+    document.getElementById('cover-input').value = '';
+    document.getElementById('cover-preview').style.display = 'none';
+    addGenres = [];
+    addCoverUrl = null;
+    renderAddGenreChips();
+    renderManageList();
+
+    if (document.getElementById('page-games').classList.contains('active')) {
+      renderFilterBar();
+      renderGameCards(games);
+    }
+  } catch (e) {
+    toast('Gagal publish: ' + e.message, 'error');
+  }
+}
+
+// ===================== ADMIN - MANAGE =====================
+function renderManageList() {
+  const list = document.getElementById('manage-list');
+  if (games.length === 0) {
+    list.innerHTML = '<div class="empty-state" style="padding:2rem"><div class="empty-icon" style="font-size:2rem">🎮</div><p>Belum ada game.</p></div>';
+    return;
+  }
+  list.innerHTML = games.map(g => `
+    <div class="manage-item">
+      ${g.cover ? `<img src="${escAttr(g.cover)}" alt="">` : `<div style="width:52px;height:36px;background:var(--dark3);border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:1.2rem;flex-shrink:0">🎮</div>`}
+      <div class="manage-item-info">
+        <div class="manage-item-title">${escHtml(g.title)}</div>
+        <div class="manage-item-genre">${(g.genres || []).join(', ') || 'Tanpa genre'}</div>
+      </div>
+      <div class="manage-item-actions">
+        <button class="btn btn-sm btn-outline" onclick="openEditGame('${escAttr(g.id)}')">✏️</button>
+        <button class="btn btn-sm btn-danger" onclick="deleteGame('${escAttr(g.id)}')">🗑️</button>
+      </div>
+    </div>
+  `).join('');
+}
+
+async function deleteGame(id) {
+  if (!confirm('Hapus game ini?')) return;
+  try {
+    await loadGames();
+    games = games.filter(g => g.id !== id);
+    await saveToAPI(games);
+    saveCache(games);
+    toast('Game dihapus!', 'success');
+    renderManageList();
+    if (document.getElementById('page-games').classList.contains('active')) {
+      renderFilterBar();
+      renderGameCards(games);
+    }
+  } catch (e) {
+    toast('Gagal hapus: ' + e.message, 'error');
+  }
+}
+
+function openEditGame(id) {
+  const game = games.find(g => g.id === id);
+  if (!game) return;
+  document.getElementById('edit-id').value = id;
+  document.getElementById('edit-title').value = game.title || '';
+  document.getElementById('edit-synopsis').value = game.synopsis || '';
+  document.getElementById('edit-download').value = game.downloadLink || '';
+  document.getElementById('edit-dev').value = game.developer || '';
+  document.getElementById('edit-original').value = game.originalLink || '';
+  editGenres = [...(game.genres || [])];
+  editCoverUrl = null;
+  document.getElementById('edit-cover-preview').style.display = game.cover ? 'block' : 'none';
+  if (game.cover) document.getElementById('edit-cover-preview-img').src = game.cover;
+  document.getElementById('edit-cover-input').value = '';
+  renderEditGenreChips();
+  openModal('edit-modal');
+}
+
+const edz = document.getElementById('edit-drop-zone');
+edz.addEventListener('dragover', e => { e.preventDefault(); edz.classList.add('dragover'); });
+edz.addEventListener('dragleave', () => edz.classList.remove('dragover'));
+edz.addEventListener('drop', e => {
+  e.preventDefault();
+  edz.classList.remove('dragover');
+  const file = e.dataTransfer.files[0];
+  if (file) handleEditCoverFile(file);
+});
+
+async function handleEditCoverFile(file) {
+  if (!file) return;
+  const edz = document.getElementById('edit-drop-zone');
+  const edzText = edz.querySelector('.drop-zone-text');
+  const originalHTML = edzText.innerHTML;
+  edz.classList.add('uploading');
+  edzText.innerHTML = '<span class="drop-icon">⏳</span>Mengompres cover...';
+  document.getElementById('edit-cover-preview').style.display = 'none';
+  editCoverUrl = null;
+  try {
+    editCoverUrl = await compressCover(file);
+    document.getElementById('edit-cover-preview-img').src = editCoverUrl;
+    document.getElementById('edit-cover-preview').style.display = 'block';
+  } catch (e) {
+    toast('Gagal kompres cover: ' + e.message, 'error');
+  } finally {
+    edz.classList.remove('uploading');
+    edzText.innerHTML = originalHTML;
+  }
+}
+
+function addEditGenreChip() {
+  const input = document.getElementById('edit-genre-input');
+  const val = input.value.trim();
+  if (!val || editGenres.includes(val)) { input.value = ''; return; }
+  editGenres.push(val);
+  input.value = '';
+  renderEditGenreChips();
+}
+
+function renderEditGenreChips() {
+  const wrap = document.getElementById('edit-genre-chips');
+  wrap.innerHTML = editGenres.map((g, i) =>
+    `<span class="genre-chip">${escHtml(g)}<span class="rm" onclick="removeEditGenre(${i})">×</span></span>`
+  ).join('');
+}
+
+function removeEditGenre(i) {
+  editGenres.splice(i, 1);
+  renderEditGenreChips();
+}
+
+async function saveEdit() {
+  const id = document.getElementById('edit-id').value;
+  const title = document.getElementById('edit-title').value.trim();
+  const synopsis = document.getElementById('edit-synopsis').value.trim();
+  const downloadLink = document.getElementById('edit-download').value.trim();
+  const developer = document.getElementById('edit-dev').value.trim();
+  const originalLink = document.getElementById('edit-original').value.trim();
+
+  if (!title) { toast('Judul game wajib diisi!', 'error'); return; }
+  if (!synopsis) { toast('Sinopsis wajib diisi!', 'error'); return; }
+  if (!downloadLink) { toast('Link download wajib diisi!', 'error'); return; }
+  if (!developer) { toast('Nama developer wajib diisi!', 'error'); return; }
+
+  try {
+    await loadGames();
+    const idx = games.findIndex(g => g.id === id);
+    if (idx === -1) { toast('Game tidak ditemukan', 'error'); return; }
+
+    const existingCover = games[idx].cover;
+    games[idx] = {
+      ...games[idx],
+      title,
+      synopsis,
+      genres: [...editGenres],
+      downloadLink,
+      developer,
+      originalLink: originalLink || '',
+      cover: editCoverUrl !== null ? editCoverUrl : existingCover
+    };
+
+    await saveToAPI(games);
+    saveCache(games);
+    toast('Game berhasil diperbarui!', 'success');
+    closeModal('edit-modal');
+    renderManageList();
+
+    if (document.getElementById('page-games').classList.contains('active')) {
+      renderFilterBar();
+      renderGameCards(games);
+    }
+  } catch (e) {
+    toast('Gagal simpan: ' + e.message, 'error');
+  }
+}
+
+// ===================== MODAL HELPERS =====================
+function openModal(id) {
+  document.getElementById(id).classList.add('open');
+}
+
+function closeModal(id) {
+  document.getElementById(id).classList.remove('open');
+}
+
+document.querySelectorAll('.modal-overlay').forEach(overlay => {
+  overlay.addEventListener('click', function (e) {
+    if (e.target === this) this.classList.remove('open');
+  });
+});
+
+// ===================== TABS =====================
+function switchTab(tabId, btn) {
+  document.querySelectorAll('#admin-modal .tab-content').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('#admin-modal .tab-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById(tabId).classList.add('active');
+  if (btn) btn.classList.add('active');
+  if (tabId === 'tab-manage') renderManageList();
+}
+
+// ===================== TOAST =====================
+function toast(msg, type = 'info') {
+  const el = document.createElement('div');
+  el.className = `toast ${type}`;
+  el.textContent = msg;
+  document.getElementById('toast-container').appendChild(el);
+  setTimeout(() => el.remove(), 3500);
+}
+
+// ===================== ESCAPE HELPERS =====================
+function escHtml(str) {
+  const d = document.createElement('div');
+  d.textContent = str;
+  return d.innerHTML;
+}
+
+function escAttr(str) {
+  return String(str).replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+}
+
+// Keep escAttr as alias
+function escapeAttr(str) { return escAttr(str); }
+
+// ===================== INIT =====================
+(async function init() {
+  // Preload cache on first load
+  try {
+    await loadGames();
+  } catch (e) {
+    // silent fail; will retry when games page is opened
+  }
+})();
+</script>
+
+</body>
+</html>
